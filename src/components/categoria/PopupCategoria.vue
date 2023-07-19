@@ -1,10 +1,11 @@
 <template>
   <div>
-    <v-btn flat @click="setIsOpen()">Cadastro</v-btn>
+    <v-btn flat @click="setIsOpen()">Categoria</v-btn>
     <v-dialog v-model="isOpen" width="300">
       <v-card>
         <v-card-text>
           <v-form class="px-5">
+            <v-list-subheader>Cadastro Categoria</v-list-subheader>
             <v-text-field label="Nome da categoria" v-model="category_name"></v-text-field>
 
             <v-btn color="cyan-accent-4" @click="submit()">Salvar</v-btn>

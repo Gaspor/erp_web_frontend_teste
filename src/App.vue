@@ -3,27 +3,24 @@
     <v-navigation-drawer v-model="isDrowerOpen">
       <v-list>
         <v-list-subheader>Menu</v-list-subheader>
-        <v-list-group value="Produtos">
+        <v-list-group value="Cadastros">
           <template #activator="{ props }">
-            <v-list-item v-bind="props" title="Produtos"></v-list-item>
+            <v-list-item v-bind="props" title="Cadastros"></v-list-item>
           </template>
           <v-list-item>
             <PopupProduto />
           </v-list-item>
           <v-list-item>
-            <v-btn variant="outline">Relatório</v-btn>
+            <PopupCategoria />
           </v-list-item>
         </v-list-group>
 
-        <v-list-group value="Categoria">
+        <v-list-group value="Relatórios">
           <template #activator="{ props }">
-            <v-list-item v-bind="props" title="Categoria"></v-list-item>
+            <v-list-item v-bind="props" title="Relatórios"></v-list-item>
           </template>
           <v-list-item>
-            <PopupCategoria />
-          </v-list-item>
-          <v-list-item>
-            <v-btn variant="outline">Relatório</v-btn>
+            <Filtro />
           </v-list-item>
         </v-list-group>
       </v-list>
@@ -58,7 +55,9 @@
 
               <v-card-actions>
                 <v-btn variant="outlined" color="primary">ver mais</v-btn>
-                <v-btn class="ml-auto" variant="outlined" color="red">Excluir</v-btn>
+                <v-btn class="ml-auto" variant="outlined" color="red"
+                  >Excluir</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-col>
@@ -142,15 +141,16 @@
 
 <script>
 import PopupProduto from "./components/produto/PopupProduto";
-import PopupCategoria from "./components/categoria/PopupCategoria"
+import PopupCategoria from "./components/categoria/PopupCategoria";
+import Filtro from "./components/util/Filtro";
+
 export default {
-  components: {PopupProduto, PopupCategoria}
-}
+  components: { PopupProduto, PopupCategoria, Filtro },
+};
 </script>
 
 <script setup>
 import { ref } from "vue";
-import PopupCategoriaVue from './components/categoria/PopupCategoria.vue';
 
 const isDrowerOpen = ref(false);
 </script>
