@@ -13,12 +13,9 @@
               :rules="emptyFieldRules"
               v-model="category"
               :items="[
-                'California',
-                'Colorado',
-                'Florida',
-                'Georgia',
-                'Texas',
-                'Wyoming',
+                'gamer',
+                'portatil',
+                'pc-gamer'
               ]"
             ></v-select>
             <v-textarea label="Descrição" :rules="emptyFieldRules" v-model="description"></v-textarea>
@@ -28,10 +25,23 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <!-- Diálogo para exibir mensagem de sucesso -->
+    <v-dialog v-model="showSuccessDialog" max-width="300">
+      <v-card>
+        <v-card-title class="headline cyan">Sucesso!</v-card-title>
+        <v-card-text>{{ successMessage }}</v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="closeSuccessDialog">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -42,29 +52,46 @@ export default {
       isOpen: false,
       emptyFieldRules: [
         value => {
-          if (value) return true
+          if (value) return true;
 
-          return 'O campo deve ser preenchido.'
+          return 'O campo deve ser preenchido.';
         }
       ],
+      successMessage: "",
+      showSuccessDialog: false,
     };
   },
 
   methods: {
     setIsOpen() {
-      this.isOpen = this.isOpen ? false : true;
+      this.isOpen = !this.isOpen;
     },
     submit() {
-      console.log(
-        this.product_name,
-        this.price,
-        this.category,
-        this.description
-      );
+      const requestData = {
+        product_name: this.product_name,
+        price: this.price,
+        category: this.category,
+        description: this.description
+      };
+
+      axios.post('http://localhost:4000/api/products', requestData)
+        .then(response => {
+          this.successMessage = "Produto cadastrado com sucesso!";
+          this.showSuccessDialog = true;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    closeSuccessDialog() {
+      this.showSuccessDialog = false;
+      // Atualiza a página após o usuário confirmar a mensagem de sucesso
+      window.location.reload();
     },
   },
 };
 </script>
 
 <style>
+
 </style>
