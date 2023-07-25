@@ -6,19 +6,30 @@
         <v-card-text>
           <v-form class="px-3">
             <v-list-subheader>Cadastro Produto</v-list-subheader>
-            <v-text-field label="Nome" :rules="emptyFieldRules" v-model="product_name"></v-text-field>
-            <v-text-field label="Preço" type="number" :rules="emptyFieldRules" v-model="price"></v-text-field>
+            <v-text-field
+              label="Nome"
+              :rules="emptyFieldRules"
+              v-model="product_name"
+            ></v-text-field>
+            <v-text-field
+              label="Preço"
+              type="number"
+              :rules="emptyFieldRules"
+              v-model="price"
+            ></v-text-field>
             <v-select
               label="Categoria"
               :rules="emptyFieldRules"
               v-model="category"
-              :items="[
-                'gamer',
-                'portatil',
-                'pc-gamer'
-              ]"
+              :items="categories"
+              item-title="category_name"
+              item-value="categoryid"
             ></v-select>
-            <v-textarea label="Descrição" :rules="emptyFieldRules" v-model="description"></v-textarea>
+            <v-textarea
+              label="Descrição"
+              :rules="emptyFieldRules"
+              v-model="description"
+            ></v-textarea>
 
             <v-btn color="cyan-accent-4" @click="submit()">Salvar</v-btn>
           </v-form>
@@ -40,7 +51,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -51,38 +62,56 @@ export default {
       description: "",
       isOpen: false,
       emptyFieldRules: [
-        value => {
+        (value) => {
           if (value) return true;
 
-          return 'O campo deve ser preenchido.';
-        }
+          return "O campo deve ser preenchido.";
+        },
       ],
       successMessage: "",
       showSuccessDialog: false,
     };
   },
 
+  mounted() {
+    this.fetchItems();
+  },
+
   methods: {
     setIsOpen() {
       this.isOpen = !this.isOpen;
     },
+
     submit() {
       const requestData = {
         product_name: this.product_name,
         price: this.price,
         category: this.category,
-        description: this.description
+        description: this.description,
       };
 
-      axios.post('http://localhost:4000/api/products', requestData)
-        .then(response => {
+      axios
+        .post("http://localhost:4000/api/products", requestData)
+        .then((response) => {
           this.successMessage = "Produto cadastrado com sucesso!";
           this.showSuccessDialog = true;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
         });
     },
+
+    fetchItems() {
+      axios
+        .get("http://localhost:4000/api/category")
+        .then((response) => {
+          this.categories = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
     closeSuccessDialog() {
       this.showSuccessDialog = false;
       // Atualiza a página após o usuário confirmar a mensagem de sucesso
@@ -93,5 +122,4 @@ export default {
 </script>
 
 <style>
-
 </style>
