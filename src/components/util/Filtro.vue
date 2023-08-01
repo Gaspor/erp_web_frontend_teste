@@ -34,7 +34,6 @@
     </v-dialog>
   </div>
 </template>
-
 <script>
 export default {
   data() {
@@ -54,8 +53,10 @@ export default {
       console.log(
         this.field,
         this.condition,
-        this.content
+        this.content,
       );
+
+       this.$router.push('/teste');
     },
   },
 };

@@ -98,6 +98,7 @@ export default {
         })
         .catch((error) => {
           console.error(error);
+          alert('Sem conexão com o servidor');
         });
     },
 
