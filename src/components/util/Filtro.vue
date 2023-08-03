@@ -55,8 +55,7 @@ export default {
         this.condition,
         this.content,
       );
-
-       this.$router.push('/teste');
+       this.$router.push('/relatorio');
     },
   },
 };

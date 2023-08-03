@@ -7,6 +7,7 @@
 // Components
 import App from './App'
 import router from './router'
+
 // Composables
 import { createApp } from 'vue'
 

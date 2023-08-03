@@ -83,12 +83,13 @@ export default {
     },
 
     submit() {
-      const requestData = {
-        product_name: this.product_name,
-        price: this.price,
-        category: this.category,
-        description: this.description,
-      };
+      if(this.product_name !== '' && this.price !== '' && this.category !== '' && this.description !== ''){
+        const requestData = {
+          product_name: this.product_name,
+          price: this.price,
+          category: this.category,
+          description: this.description,
+        };
 
       axios
         .post("http://localhost:4000/api/products", requestData)
@@ -100,6 +101,7 @@ export default {
           console.error(error);
           alert('Sem conexão com o servidor');
         });
+      }
     },
 
     fetchItems() {

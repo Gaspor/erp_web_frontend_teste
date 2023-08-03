@@ -28,7 +28,7 @@
                 </v-img>
 
                 <v-card-subtitle class="mt-3">{{
-                  item.category
+                  item.category_name
                 }}</v-card-subtitle>
 
                 <v-card-text>
