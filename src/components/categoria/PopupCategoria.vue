@@ -4,14 +4,15 @@
     <v-dialog v-model="isOpen" width="300">
       <v-card>
         <v-card-text>
-          <v-form class="px-5">
+          <v-form ref="form" class="px-5">
             <v-list-subheader>Cadastro Categoria</v-list-subheader>
             <v-text-field
               label="Nome da categoria"
               v-model="category_name"
+              :rules="emptyFieldRules"
             ></v-text-field>
 
-            <v-btn color="cyan-accent-4" @click="submit()">Salvar</v-btn>
+            <v-btn color="cyan-accent-4" @click="validate()">Salvar</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
@@ -38,6 +39,9 @@ export default {
     return {
       category_name: "",
       isOpen: false,
+      emptyFieldRules: [
+          v => !!v || 'O campo deve ser preenchido',
+      ],
       successMessage: "",
       showSuccessDialog: false,
     };
@@ -47,21 +51,24 @@ export default {
     setIsOpen() {
       this.isOpen = this.isOpen ? false : true;
     },
-    submit() {
-      const requestData = {
-        category_name: this.category_name,
-      };
+    async validate() {
+      const { valid } = await this.$refs.form.validate();
+      if (valid) {
+        const requestData = {
+          category_name: this.category_name,
+        };
 
-      axios
-        .post("http://localhost:4000/api/category", requestData)
-        .then((response) => {
-          this.successMessage = "Categoria cadastrada com sucesso!";
-          this.showSuccessDialog = true;
-        })
-        .catch((error) => {
-          console.error(error);
-          alert('Sem conexão com o servidor');
-        });
+        axios
+          .post("http://localhost:4000/api/category", requestData)
+          .then((response) => {
+            this.successMessage = "Categoria cadastrada com sucesso!";
+            this.showSuccessDialog = true;
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("Sem conexão com o servidor");
+          });
+      }
     },
 
     closeSuccessDialog() {

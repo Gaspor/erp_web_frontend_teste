@@ -18,9 +18,15 @@
         <template #activator="{ props }">
           <v-list-item v-bind="props" title="Relatórios"></v-list-item>
         </template>
+
         <v-list-item>
-          <Filtro />
+          <v-btn flat @click="setIsOpen()">Produto</v-btn>
         </v-list-item>
+
+        <v-list-item>
+          <v-btn flat @click="setIsOpen()">Categoria</v-btn>
+        </v-list-item>
+
       </v-list-group>
     </v-list>
   </v-navigation-drawer>
@@ -36,12 +42,16 @@
 <script>
 import PopupProduto from "../produto/PopupProduto.vue"
 import PopupCategoria from "../categoria/PopupCategoria.vue";
-import Filtro from "./Filtro.vue";
 
 export default {
-    components: { PopupProduto, PopupCategoria, Filtro},
-    isDrowerOpen: false,
+    components: { PopupProduto, PopupCategoria},
+   
+    methods:{
+      setIsOpen(){this.$router.push('/filtro');}
+    }
 };
+
+
 </script>
 
 <script setup>

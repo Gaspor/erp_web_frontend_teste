@@ -4,7 +4,7 @@
     <v-dialog v-model="isOpen" width="auto">
       <v-card>
         <v-card-text>
-          <v-form class="px-3">
+          <v-form ref="form" class="px-3">
             <v-list-subheader>Cadastro Produto</v-list-subheader>
             <v-text-field
               label="Nome"
@@ -31,7 +31,7 @@
               v-model="description"
             ></v-textarea>
 
-            <v-btn color="cyan-accent-4" @click="submit()">Salvar</v-btn>
+            <v-btn color="cyan-accent-4" @click="validate()">Salvar</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
@@ -62,11 +62,7 @@ export default {
       description: "",
       isOpen: false,
       emptyFieldRules: [
-        (value) => {
-          if (value) return true;
-
-          return "O campo deve ser preenchido.";
-        },
+          v => !!v || 'O campo deve ser preenchido',
       ],
       successMessage: "",
       showSuccessDialog: false,
@@ -82,8 +78,9 @@ export default {
       this.isOpen = !this.isOpen;
     },
 
-    submit() {
-      if(this.product_name !== '' && this.price !== '' && this.category !== '' && this.description !== ''){
+    async validate() {
+      const { valid } = await this.$refs.form.validate()
+        if (valid){
         const requestData = {
           product_name: this.product_name,
           price: this.price,
@@ -101,7 +98,7 @@ export default {
           console.error(error);
           alert('Sem conexão com o servidor');
         });
-      }
+        }
     },
 
     fetchItems() {
