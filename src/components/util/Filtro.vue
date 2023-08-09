@@ -44,7 +44,7 @@ export default {
   methods: {
     submit() {
       console.log(this.field, this.condition, this.content);
-      this.$router.push("/relatorio");
+      this.$router.push({name: 'relatorio'});
     },
   },
 };

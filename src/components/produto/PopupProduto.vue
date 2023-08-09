@@ -8,18 +8,18 @@
             <v-list-subheader>Cadastro Produto</v-list-subheader>
             <v-text-field
               label="Nome"
-              :rules="emptyFieldRules"
+              :rules="voidRule"
               v-model="product_name"
             ></v-text-field>
             <v-text-field
               label="Preço"
               type="number"
-              :rules="emptyFieldRules"
+              :rules="voidRule"
               v-model="price"
             ></v-text-field>
             <v-select
               label="Categoria"
-              :rules="emptyFieldRules"
+              :rules="voidRule"
               v-model="category"
               :items="categories"
               item-title="category_name"
@@ -27,7 +27,7 @@
             ></v-select>
             <v-textarea
               label="Descrição"
-              :rules="emptyFieldRules"
+              :rules="voidRule"
               v-model="description"
             ></v-textarea>
 
@@ -61,7 +61,7 @@ export default {
       category: "",
       description: "",
       isOpen: false,
-      emptyFieldRules: [
+      voidRule: [
           v => !!v || 'O campo deve ser preenchido',
       ],
       successMessage: "",

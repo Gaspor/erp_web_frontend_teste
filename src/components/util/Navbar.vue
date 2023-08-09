@@ -20,11 +20,11 @@
         </template>
 
         <v-list-item>
-          <v-btn flat @click="setIsOpen()">Produto</v-btn>
+          <v-btn flat @click="clickFilter()">Produto</v-btn>
         </v-list-item>
 
         <v-list-item>
-          <v-btn flat @click="setIsOpen()">Categoria</v-btn>
+          <v-btn flat @click="clickFilter()">Categoria</v-btn>
         </v-list-item>
 
       </v-list-group>
@@ -35,7 +35,10 @@
     <v-app-bar-nav-icon
       @click="isDrowerOpen = !isDrowerOpen"
     ></v-app-bar-nav-icon>
-    <v-app-bar-title>Produtos</v-app-bar-title>
+    <v-app-bar-title>{{ currentRouteTitle }}</v-app-bar-title>
+    <v-btn @click="clickHome()" variant="text" icon="mdi-home" color="primary"></v-btn>
+    <v-btn @click="clickFinans()" variant="text" icon="mdi-cash-register" color="primary"></v-btn>
+    <v-btn @click="clickStock()" variant="text" icon="mdi-archive" color="primary"></v-btn>
   </v-app-bar>
 </template>
 
@@ -47,7 +50,14 @@ export default {
     components: { PopupProduto, PopupCategoria},
    
     methods:{
-      setIsOpen(){this.$router.push('/filtro');}
+      clickHome(){this.$router.push({name: 'home'});},
+      clickFilter(){this.$router.push({name: 'filtro'});},
+      clickFinans(){this.$router.push({name: 'financeiro'});},
+      clickStock(){this.$router.push({name: 'estoque'});}
+    },
+
+    props:{
+      currentRouteTitle: String,
     }
 };
 

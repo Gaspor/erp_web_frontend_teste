@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <Navbar />
+    <Navbar :currentRouteTitle="'Produtos'" />
     <v-main>
       <v-container>
         <template v-if="items.length === 0">
           <v-row>
             <v-col>
-              <v-card class="mt-15 ml-15" width="300px">
+              <v-card class="empty-card" width="300px">
                 <v-card-text>Não há produtos cadastrados.</v-card-text>
               </v-card>
             </v-col>
@@ -129,4 +129,9 @@ export default {
 </script>
 
 <style>
+.empty-card {
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 200px;
+}
 </style>
