@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { apiService } from "@/api";
 
 export default {
   data() {
@@ -51,6 +51,7 @@ export default {
     setIsOpen() {
       this.isOpen = this.isOpen ? false : true;
     },
+
     async validate() {
       const { valid } = await this.$refs.form.validate();
       if (valid) {
@@ -58,16 +59,14 @@ export default {
           category_name: this.category_name,
         };
 
-        axios
-          .post("http://localhost:4000/api/category", requestData)
-          .then((response) => {
-            this.successMessage = "Categoria cadastrada com sucesso!";
-            this.showSuccessDialog = true;
-          })
-          .catch((error) => {
-            console.error(error);
-            alert("Sem conexão com o servidor");
-          });
+        try {
+          const response = await apiService.createCategory(requestData);
+          this.successMessage = "Categoria cadastrada com sucesso!";
+          this.showSuccessDialog = true;
+        } catch (error) {
+          console.error(error);
+          alert("Sem conexão com o servidor");
+        }
       }
     },
 

@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { apiService } from "@/api";
 
 export default {
   data() {
@@ -79,8 +79,8 @@ export default {
     },
 
     async validate() {
-      const { valid } = await this.$refs.form.validate()
-        if (valid){
+      const { valid } = await this.$refs.form.validate();
+      if (valid) {
         const requestData = {
           product_name: this.product_name,
           price: this.price,
@@ -88,28 +88,24 @@ export default {
           description: this.description,
         };
 
-      axios
-        .post("http://localhost:4000/api/products", requestData)
-        .then((response) => {
+        try {
+          const response = await apiService.createProduct(requestData);
           this.successMessage = "Produto cadastrado com sucesso!";
           this.showSuccessDialog = true;
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error(error);
-          alert('Sem conexão com o servidor');
-        });
+          alert("Sem conexão com o servidor");
         }
+      }
     },
 
-    fetchItems() {
-      axios
-        .get("http://localhost:4000/api/category")
-        .then((response) => {
-          this.categories = response.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    async fetchItems() {
+      try {
+        const response = await apiService.fetchCategories();
+        this.categories = response.data;
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     closeSuccessDialog() {

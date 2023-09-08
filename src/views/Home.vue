@@ -24,27 +24,36 @@
             >
               <v-card>
                 <v-img class="align-end" :src="item.image">
-                  <v-card-title>{{ item.product_name }}</v-card-title>
+                  <v-card-title>
+                    <div class="description-product-name">{{ item.product_name }}</div>
+                  </v-card-title>
                 </v-img>
 
-                <v-card-subtitle class="mt-3">{{
-                  item.category_name
-                }}</v-card-subtitle>
+                <v-card-subtitle class="mt-3">
+                  {{ item.category_name }}
+                </v-card-subtitle>
 
                 <v-card-text>
                   <div>Preço: R$ {{ item.price }}</div>
-                  <div>Descrição: {{ item.description }}</div>
+                  <div class="description-text">{{ item.description }}</div>
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn variant="outlined" color="primary">ver mais</v-btn>
                   <v-btn
-                    class="ml-auto"
                     variant="outlined"
-                    color="red"
-                    @click="confirmDelete(item.productid)"
-                    >Excluir</v-btn
+                    color="primary"
+                    @click="openProductDialog(item)"
                   >
+                    Ver mais
+                  </v-btn>
+                  <v-btn
+                    variant="outlined"
+                    class="ml-auto"
+                    @click="confirmDelete(item.productid)"
+                    color="red"
+                  >
+                    Excluir
+                  </v-btn>
                 </v-card-actions>
               </v-card>
             </v-col>
@@ -54,30 +63,38 @@
     </v-main>
 
     <!-- Diálogo de confirmação -->
-    <v-dialog v-model="confirmDialog" max-width="300">
-      <v-card>
-        <v-card-title class="headline red">Confirmação</v-card-title>
-        <v-card-text>Tem certeza que deseja excluir este produto?</v-card-text>
-        <v-card-actions>
-          <v-btn color="red" @click="deleteItem(itemToDelete.productid)">Sim</v-btn>
-          <v-btn color="primary" @click="cancelDelete">Cancelar</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <confirmation-dialog
+      v-model="confirmDialog"
+      :message="confirmMessage"
+      @confirmed="deleteItem(itemToDelete.productid)"
+      @canceled="cancelDelete"
+    ></confirmation-dialog>
+
+    <!-- Diálogo de detalhes do produto -->
+    <product-details-dialog
+      v-model="productDialogVisible"
+      :product="selectedProduct"
+      @closed="close"
+    ></product-details-dialog>
   </v-app>
 </template>
 
 <script>
-import axios from "axios";
-import Navbar from "../components/util/Navbar.vue"
+import { apiService } from "../api";
+import Navbar from "../components/util/Navbar.vue";
+import ConfirmationDialog from "../components/util/ConfirmationDialog.vue";
+import ProductDetailsDialog from "../components/util/ProductDetailsDialog.vue";
 
 export default {
-  components: { Navbar },
+  components: { Navbar, ConfirmationDialog, ProductDetailsDialog },
   data() {
     return {
       items: [],
       confirmDialog: false,
       itemToDelete: null,
+      confirmMessage: "Tem certeza que deseja excluir este produto?",
+      productDialogVisible: false,
+      selectedProduct: null,
     };
   },
 
@@ -86,43 +103,49 @@ export default {
   },
 
   methods: {
-    fetchItems() {
-      axios
-        .get("http://localhost:4000/api/products")
-        .then((response) => {
-          this.items = response.data;
-        })
-        .catch((error) => {
-          console.error(error);
-          alert('Sem conexão com o servidor');
-        });
+    async fetchItems() {
+      try {
+        const response = await apiService.fetchProducts();
+        this.items = response.data;
+      } catch (error) {
+        console.error(error);
+        alert("Sem conexão com o servidor");
+      }
     },
 
     confirmDelete(productId) {
-      this.itemToDelete = this.items.find((item) => item.productid === productId);
+      this.itemToDelete = this.items.find(
+        (item) => item.productid === productId
+      );
       this.confirmDialog = true;
     },
 
-    deleteItem(productId) {
-      axios
-        .delete(`http://localhost:4000/api/products/${productId}`)
-        .then((response) => {
-          // Atualiza a lista de itens após a exclusão
-          this.items = this.items.filter((item) => item.productid !== productId);
-        })
-        .catch((error) => {
-          console.error(error);
-          alert('Sem conexão com o servidor');
-        })
-        .finally(() => {
-          this.confirmDialog = false;
-          this.itemToDelete = null;
-        });
+    async deleteItem(productId) {
+      try {
+        await apiService.deleteProduct(productId);
+        // Atualiza a lista de itens após a exclusão
+        this.items = this.items.filter((item) => item.productid !== productId);
+      } catch (error) {
+        console.error(error);
+        alert("Sem conexão com o servidor");
+      } finally {
+        this.confirmDialog = false;
+        this.itemToDelete = null;
+      }
     },
 
     cancelDelete() {
       this.confirmDialog = false;
       this.itemToDelete = null;
+    },
+
+    close() {
+      this.productDialogVisible = false;
+    },
+
+    openProductDialog(product) {
+      this.selectedProduct = product;
+      this.productDialogVisible = true;
     },
   },
 };
@@ -133,5 +156,19 @@ export default {
   margin: 0 auto;
   text-align: center;
   margin-top: 200px;
+}
+
+.description-text {
+  max-height: 1.2em; /* Defina a altura máxima desejada em em ou px */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.description-product-name {
+  max-width: 12em; 
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>
