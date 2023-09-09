@@ -1,1 +1,0 @@
-import{_ as a,E as o,r as n,o as t,C as r,w as s,G as c,f as _}from"./index-67668a59.js";const p={components:{Navbar:o}};function i(f,l,u,m,d,$){const e=n("Navbar");return t(),r(c,null,{default:s(()=>[_(e,{currentRouteTitle:"Financeiro"})]),_:1})}const x=a(p,[["render",i]]);export{x as default};
