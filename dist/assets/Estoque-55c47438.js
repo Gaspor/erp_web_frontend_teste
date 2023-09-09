@@ -1,0 +1,1 @@
+import{_ as o,E as t,r as a,o as s,C as n,w as r,G as c,f as _}from"./index-67668a59.js";const p={components:{Navbar:t}};function u(f,l,i,m,d,$){const e=a("Navbar");return s(),n(c,null,{default:r(()=>[_(e,{currentRouteTitle:"Estoque"})]),_:1})}const x=o(p,[["render",u]]);export{x as default};
